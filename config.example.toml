@@ -1,0 +1,69 @@
+# Copy to config.toml and edit. Everything here is optional; these are the defaults.
+
+workspace = "workspace"          # jobs, rendered clips, outbox (relative to this file)
+
+[clips]
+count = 3                        # clips per source video
+min_seconds = 20
+max_seconds = 59                 # 59 keeps every clip Shorts/Reels safe
+layout = "blur"                  # "blur" keeps the whole frame, "crop" fills 9:16 from the centre
+captions = true                  # burn in word-by-word captions when a transcript exists
+hook_seconds = 3.5               # how long the hook headline stays on screen
+credit_source = true             # small "via <channel>" line on every clip
+font = "Arial"
+
+[ai]
+enabled = true                   # false = pick moments from audio energy and scene cuts only
+model = "claude-opus-5-5"        # "claude-haiku-5-5" is far cheaper if quality holds for you
+effort = "medium"
+niche = "GTA VI gameplay, trailers and news"
+voice = "hyped but accurate, no clickbait lies, no spoilers in titles"
+
+[sources]
+# "Grab the most viewed video" only looks at channels you list here, i.e. channels
+# you own or have clipping permission for (campaign, written OK, Creative Commons).
+allowlist_channels = [
+    # "https://www.youtube.com/@YourOwnChannel",
+]
+# A search query is also supported, but results from channels that are not on the
+# allowlist are never processed automatically unless allow_unverified = true, and
+# even then they only ever become drafts.
+query = "GTA VI gameplay"
+allow_unverified = false
+max_source_minutes = 45
+
+[publish]
+mode = "outbox"                  # "outbox" = files + captions in workspace/outbox, "postiz" = Postiz drafts/schedule
+post_type = "draft"              # "draft" = you approve in Postiz, "schedule" = goes live at the slot
+platforms = ["tiktok", "youtube", "instagram", "facebook", "threads", "x", "reddit"]
+post_times = ["12:00", "17:00", "21:00"]   # local time slots, one clip per slot
+max_posts_per_day = 3
+
+# Per-platform Postiz settings. Run `clipforge publish <job> --dry-run` to see the payloads,
+# and `postiz integrations:settings <id>` to see what each of your channels accepts.
+[publish.settings.tiktok]
+privacy_level = "PUBLIC_TO_EVERYONE"
+duet = false
+stitch = false
+comment = true
+autoAddMusic = "no"
+brand_content_toggle = false
+brand_organic_toggle = false
+content_posting_method = "DIRECT_POST"
+
+[publish.settings.youtube]
+type = "public"
+
+[publish.settings.instagram]
+post_type = "post"
+
+[publish.settings.x]
+who_can_reply_post = "everyone"
+
+[publish.settings.reddit]
+subreddit = ""                   # e.g. "u_yourname" (your profile) until a subreddit's rules allow your clips
+
+[schedule]
+# Used by the dashboard timer and `clipforge auto`.
+enabled = false
+every_hours = 6
